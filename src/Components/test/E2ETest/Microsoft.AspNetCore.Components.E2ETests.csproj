@@ -47,6 +47,20 @@
     <ProjectReference Include="..\..\Blazor\testassets\Wasm.Authentication.Server\Wasm.Authentication.Server.csproj" />
   </ItemGroup>
 
+  <Target Name="CopyReferencedProjectStaticWebAssetsManifest" BeforeTargets="Compile">
+    <MSBuild
+      Projects="..\..\Blazor\testassets\Wasm.Authentication.Server\Wasm.Authentication.Server.csproj"
+      Targets="GetStaticWebAssetsManifest">
+      <Output TaskParameter="TargetOutputs" ItemName="_SWAManifest" />
+    </MSBuild>
+    <ItemGroup>
+      <ContentWithTargetPath Include="@(_SWAManifest)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Wasm.Authentication.Server.StaticWebAssets.xml</TargetPath>
+      </ContentWithTargetPath>
+    </ItemGroup>
+  </Target>
+
   <!-- Shared testing infrastructure for running E2E tests using selenium -->
   <Import Project="$(SharedSourceRoot)E2ETesting\E2ETesting.targets" />
 
